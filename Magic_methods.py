@@ -1,15 +1,16 @@
-attributes_limit = 3
-
+attributes_limit = 6
 
 class Calculator:
     def __init__(self, init_value):
+        if isinstance(init_value, Calculator):
+            init_value = init_value.value
         self.__dict__['value'] = init_value
         self.__dict__['amount_of_attributes'] = 2
 
     def add(self, *others):
         for i in others:
             self.value += i
-        return self
+        return self.value
 
     def multiply(self, *args):
         for x in args:
@@ -43,10 +44,10 @@ class Calculator:
         return self
 
     def __repr__(self):
-        return str(self.value)
-
-    def __str__(self):
-        return str(self.__dict__)
+        attrs = ''
+        for i in self.__dict__:
+            attrs += i + ' = ' + str(self.__dict__[i]) + '; '
+        return attrs
 
     def __add__(self, other):
         value = other.value if isinstance(other, Calculator) else other
@@ -69,7 +70,6 @@ class Calculator:
         value = other.value if isinstance(other, Calculator) else other
         return Calculator(int(self.value // value))
 
-
     def __pow__(self, power, modulo=None):
         values = power.value if isinstance(power, Calculator) else power
         return Calculator(self.value ** values)
@@ -82,13 +82,9 @@ class Calculator:
         self.__dict__[key] = value
 
 
-def print_calc(self):
-    return self
-
-
 if __name__ == '__main__':
     a = Calculator(4)
     print(a ** Calculator(2))
     # print (a.__dict__)
     print(a)
-    print (6//2)
+    print(6 // 2)
